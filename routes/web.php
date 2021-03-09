@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PublicationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,12 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [PublicationController::class,'index'])->middleware(['auth'])->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::resource('publications', PublicationController::class)->except([
+    'index'
+])->middleware(['auth']);
+Route::resource('comments', CommentController::class)->middleware(['auth']);
+
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
